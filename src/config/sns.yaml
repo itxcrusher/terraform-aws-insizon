@@ -1,0 +1,16 @@
+sns:
+  insizon-app-dev:
+    email-insizon-bounces:
+      name: "email-insizon-bounces"
+      endpoint: "https://service-api-worker-backend-app-5cc5274304b1.herokuapp.com/api/insizon/email/email-bounces"
+      protocols: ["https"]
+
+    email-insizon-complaints:
+      name: "email-insizon-complaints"
+      endpoint: "https://service-api-worker-backend-app-5cc5274304b1.herokuapp.com/api/insizon/email/email-complaints"
+      protocols: ["https"]
+
+    email-insizon-deliveries:
+      name: "email-insizon-deliveries"
+      endpoint: "https://service-api-worker-backend-app-5cc5274304b1.herokuapp.com/api/insizon/email/email-deliveries"
+      protocols: ["https"]

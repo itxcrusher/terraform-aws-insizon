@@ -1,0 +1,21 @@
+# user-roles.yaml ────────────────────────────────────────────────────────
+# NOTE: Field names kept in camelCase because existing HCL already
+# expects them.  Feel free to snake_case later—just remember to update
+# locals.tf accordingly.
+
+users:
+  # ─────────────────────────────────────────────────────────────────────
+  - userName: service-account
+    fullName: Service Account
+    roles: [serviceAccount]          # admin | developer | readOnly | serviceAccount
+    type: privileged                 # privileged | readonly
+    limit:                           # restricts access to listed app_keys
+      - insizon-app-dev
+
+  # ─────────────────────────────────────────────────────────────────────
+  - userName: lamonte-scott
+    fullName: Lamonte Scott
+    roles: [admin]
+    type: privileged
+    limit:
+      - insizon-app-dev

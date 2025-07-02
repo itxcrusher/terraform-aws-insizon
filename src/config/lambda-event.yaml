@@ -1,0 +1,28 @@
+# lambda-event.yaml ──────────────────────────────────────────────────────
+# Each record = one Lambda function.
+
+lambda_events:
+  - app_name: insizon-app
+    env: dev
+    function_name: post-to-insizon
+    create_service: true
+
+    runtime: nodejs18.x
+    handler: index.handler
+    memory_size: 128          # MB
+    timeout: 30               # seconds
+
+    # Attach AWS-managed policies by short name (module will prepend ARN).
+    role_policy:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+
+    # Plain KV environment variables.
+    env_vars:
+      TARGET_URL: http://www.insizon.com
+
+    # Triggers: `cron` (EventBridge)
+    triggers:
+      - type: http
+      - type: cron
+        schedule: "cron(0 10 * * ? *)"

@@ -1,0 +1,18 @@
+# apps.yaml ──────────────────────────────────────────────────────────────
+# One entry per <application, environment> pair that needs infrastructure.
+# Keys
+# ── app_name        : **Required**. Must be globally unique across your org.
+# ── env             : **Required**. dev | qa | prod (extend if you like).
+# ── key_group_name  : **Required**. References a CloudFront key-group in
+#                      cloudfront.yaml. This lets multiple apps share a single
+#                      key-group (max 100 keys per group in AWS).
+# ── tags            : Optional free-form map, propagated to every AWS resource
+#                      created for this app/env combo.
+
+apps:
+  - app_name: insizon-app
+    env: dev
+    key_group_name: dev-key-group
+    tags:
+      project: insizon
+      owner: dev-team
