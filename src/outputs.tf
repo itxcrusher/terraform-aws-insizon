@@ -18,17 +18,36 @@ output "cloudfront_distribution_ids" {
   value = { for k, m in module.s3_module : k => m.cloudfront_distribution_id }
 }
 
-output "cloudfront_key_pair_ids" {
-  value = { for k, m in module.s3_module : k => m.cloudfront_key_pair_ids }
-}
-
 output "cloudfront_oai_paths" {
   value = { for k, m in module.s3_module : k => m.cloudfront_oai_path }
 }
 
-# --- S3 Static Upload Buckets ---
-output "static_bucket_names" {
-  value = { for k, m in module.static_s3_upload : k => m.bucket_name }
+output "cloudfront_public_key_ids" {
+  value       = { for k, v in aws_cloudfront_public_key.global_keys : k => v.id }
+  description = "Map of alias → CloudFront public key ID"
+}
+
+output "key_group_ids" {
+  value = {
+    for k, v in aws_cloudfront_key_group.global_key_groups : k => v.id
+  }
+}
+
+# --- S3 Static Uploads ---
+output "shared_static_bucket_name" {
+  description = "The name of the shared S3 bucket for static files"
+  value       = local.static_files_bucket_name
+}
+
+output "static_uploads" {
+  description = "List of uploaded file keys per app inside the shared static bucket"
+  value = {
+    for k, m in module.static_s3_upload :
+    k => {
+      app_name      = m.app_name
+      uploaded_keys = m.uploaded_keys
+    }
+  }
 }
 
 # --- Lambda Event Functions ---

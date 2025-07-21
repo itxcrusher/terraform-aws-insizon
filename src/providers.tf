@@ -31,3 +31,12 @@ provider "aws" {
   profile                  = "default"
   shared_credentials_files = ["~/.aws/credentials"]
 }
+
+#################################################
+# SNS Provider Block
+#################################################
+# Predefine all provider aliases with known names
+provider "aws" {
+  alias  = "sns"
+  region = "us-east-1"
+}

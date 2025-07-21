@@ -14,7 +14,7 @@ locals {
   budget_cfg_raw        = yamldecode(file(var.budget_yaml)).budgets
   cloudfront_cfg_raw    = yamldecode(file(var.cloudfront_yaml)).cloudfront_key_groups
   lambda_events_cfg_raw = yamldecode(file(var.lambda_yaml)).lambda_events
-  static_files_cfg_raw  = yamldecode(file(var.static_files_yaml)).static_files
+  static_files_cfg_raw  = yamldecode(file(var.static_files_yaml))
   sns_cfg_raw           = yamldecode(file(var.sns_yaml)).sns
 }
 
@@ -143,18 +143,26 @@ locals {
     if l.create_service
   }
 
+  static_files_bucket_name = local.static_files_cfg_raw.static_files.static_folder_name
+  static_files_apps_raw    = local.static_files_cfg_raw.static_files.apps
+
   static_files_map = {
-    for s in local.static_files_cfg_raw :
-    "${s.app_name}-${s.env}" => s
+    for app in local.static_files_apps_raw :
+    app.app_name => merge(app, {
+      bucket_name = local.static_files_bucket_name
+    })
   }
+
   sns_map = {
-    for app_key, topic_map in local.sns_cfg_raw :
-    app_key => {
-      for topic_name, topic_cfg in topic_map :
-      topic_name => {
-        name      = topic_cfg.name
-        endpoint  = topic_cfg.endpoint
-        protocols = topic_cfg.protocols
+    for collection, config in yamldecode(file(var.sns_yaml)).sns :
+    collection => {
+      topics = {
+        for topic_name, topic_cfg in config.topics :
+        topic_name => {
+          name      = topic_cfg.name
+          endpoint  = topic_cfg.endpoint
+          protocols = topic_cfg.protocols
+        }
       }
     }
   }
@@ -232,4 +240,62 @@ locals {
     module.iam_users[u].secret_access_key
     if contains(rs, "serviceAccount")
   ]
+}
+
+############################################################
+# Create Static Bucket
+# This is a shared bucket for all static uploads.
+############################################################
+resource "aws_s3_bucket" "static_shared" {
+  bucket = local.static_files_bucket_name
+}
+
+resource "aws_s3_bucket_public_access_block" "static_shared" {
+  bucket                  = aws_s3_bucket.static_shared.id
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+resource "aws_s3_bucket_policy" "allow_public" {
+  bucket = aws_s3_bucket.static_shared.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Sid       = "PublicRead"
+      Effect    = "Allow"
+      Principal = "*"
+      Action    = ["s3:GetObject"]
+      Resource  = "${aws_s3_bucket.static_shared.arn}/*"
+    }]
+  })
+}
+
+############################################################
+# Cloudfront Keys and key Groups
+############################################################
+resource "aws_cloudfront_public_key" "global_keys" {
+  for_each = toset(local.active_public_keys)
+
+  name        = "${each.key}-public-key"
+  encoded_key = file("${path.module}/../private/cloudfront/rsa_keys/public/${each.key}-public-key.pem")
+  comment     = "Global CloudFront Public Key: ${each.key}"
+
+  lifecycle {
+    ignore_changes  = [encoded_key]
+  }
+}
+
+resource "aws_cloudfront_key_group" "global_key_groups" {
+  for_each = local.cf_group_map
+
+  name  = each.key
+  items = [
+    for key in each.value.keys :
+    aws_cloudfront_public_key.global_keys[key].id
+  ]
+
+  comment = "CloudFront KeyGroup for ${each.key}"
 }

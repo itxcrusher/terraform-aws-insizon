@@ -8,43 +8,43 @@
 #   • CloudFront distribution fronting the S3 bucket
 ###############################################################################
 
+# Moved the following logic to root locals
 ############################
 # 1. Public keys
 ############################
-data "local_file" "public_keys" {
-  for_each = {
-    for alias in var.cfg.key_names :
-    alias => "${path.module}/../../../private/cloudfront/rsa_keys/public/${alias}-public-key.pem"
-    if contains(var.active_keys, alias)
-  }
+# data "local_file" "public_keys" {
+#   for_each = {
+#     for alias in var.cfg.key_names :
+#     alias => "${path.module}/../../../private/cloudfront/rsa_keys/public/${alias}-public-key.pem"
+#     if contains(var.active_keys, alias)
+#   }
 
-  filename = each.value
-}
+#   filename = each.value
+# }
 
-resource "aws_cloudfront_public_key" "this" {
-  for_each = data.local_file.public_keys
+# resource "aws_cloudfront_public_key" "this" {
+#   for_each = data.local_file.public_keys
 
-  name        = "${each.key}-public-key-${substr(md5(each.value.content), 0, 8)}"
-  comment     = "Public key for ${each.key}"
-  encoded_key = each.value.content
+#   name        = "${each.key}-public-key-${substr(md5(each.value.content), 0, 8)}"
+#   comment     = "Public key for ${each.key}"
+#   encoded_key = each.value.content
 
-  lifecycle {
-    create_before_destroy = true
-    ignore_changes        = [encoded_key]
-  }
-}
+#   lifecycle {
+#     create_before_destroy = true
+#     ignore_changes        = [encoded_key]
+#   }
+# }
 
 ############################
 # 2. Shared key-group
 ############################
-resource "aws_cloudfront_key_group" "shared" {
-  name    = var.cfg.key_group_name
-  comment = "Shared key-group managed by Terraform"
+# resource "aws_cloudfront_key_group" "shared" {
+#   name    = var.cfg.key_group_name
+#   comment = "Shared key-group managed by Terraform"
 
-  items = [for pk in aws_cloudfront_public_key.this : pk.id]
+#   items = [for alias in var.cfg.key_names : var.public_key_ids[alias]]
 
-  depends_on = [aws_cloudfront_public_key.this]
-}
+# }
 
 ############################
 # 3. Origin-Access-Control
@@ -83,7 +83,7 @@ resource "aws_cloudfront_distribution" "this" {
       cookies { forward = "none" }
     }
 
-    trusted_key_groups = [aws_cloudfront_key_group.shared.id]
+    trusted_key_groups = [var.key_group_ids[var.cfg.key_group_name]]
   }
 
   restrictions {

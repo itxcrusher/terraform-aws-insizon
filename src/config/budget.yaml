@@ -3,7 +3,7 @@
 # Any omitted key falls back to the default shown below.
 
 budgets:
-  - app_name: insizon-app
+  - app_name: insizon
     env: dev
 
     # ---- Core limit ----------------------------------------------------

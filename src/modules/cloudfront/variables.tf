@@ -28,7 +28,12 @@ variable "cfg" {
   }
 }
 
-variable "active_keys" {
-  description = "List of public keys actually needed across active apps"
-  type        = list(string)
+variable "public_key_ids" {
+  description = "Map of public key alias → CloudFront public key ID, passed from root"
+  type        = map(string)
+}
+
+variable "key_group_ids" {
+  type        = map(string)
+  description = "Map of key alias to CloudFront key group IDs"
 }

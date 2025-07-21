@@ -56,3 +56,12 @@ variable "active_public_keys" {
   description = "List of public keys actively referenced by apps"
   type        = list(string)
 }
+
+variable "public_key_ids" {
+  description = "Map: public key alias → CloudFront key ID"
+  type        = map(string)
+}
+
+variable "key_group_ids" {
+  type = map(string)
+}

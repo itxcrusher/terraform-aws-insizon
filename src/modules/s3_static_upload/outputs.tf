@@ -1,4 +1,7 @@
-output "bucket_name" {
-  description = "Bucket that hosts static files"
-  value       = aws_s3_bucket.static.bucket
+output "app_name" {
+  value = var.cfg.app_name
+}
+
+output "uploaded_keys" {
+  value = [for f in aws_s3_object.static_files : f.key]
 }

@@ -82,3 +82,48 @@ FilesExcluded
   - file2.txt
   - photo.img
 that will create folder subfolder base on yaml property FolderName and will add all files. Unless the FileExcluded property is found and will avoid adding those files to subfolder bucket
+
+
+
+## Project Update
+
+
+# Project looks good so far. Just need a few fixes
+
+
+## static-files.yaml
+1. It should create one aws s3 bucket named "static_bucket" with multiple
+subfolder named from appName in yaml file
+Example
+static_files:
+  static_folder_name: static-bucket
+  apps:
+    - app_name: insizon-app-dev
+      files_excluded:
+        - photo.png
+
+for example in s3, static_bucket -> insizon_app-dev-> all insizon static files here will be uploaded besides ones that are excluded
+
+
+## sns.yaml
+1. I would like the yaml objects to look like this structure
+2. Also, the sns needs to have a field to set region as the sns are in different region than the region in provider.tf
+sns:
+  - sns_collection_name: insizon
+    region: "us-east-1"
+    bounces:
+      name: "email-insizon-bounces"
+      endpoint: "https://service-api-worker-backend-app-5cc5274304b1.herokuapp.com/api/insizon/email/email-bounces"
+      protocols: ["https"]
+    complaints:
+      name: "email-insizon-complaints"
+      endpoint: "https://service-api-worker-backend-app-5cc5274304b1.herokuapp.com/api/insizon/email/email-complaints"
+      protocols: ["https"]
+    deliveries:
+      name: "email-insizon-deliveries"
+      endpoint: "https://service-api-worker-backend-app-5cc5274304b1.herokuapp.com/api/insizon/email/email-deliveries"
+      protocols: ["https"]
+
+
+
+

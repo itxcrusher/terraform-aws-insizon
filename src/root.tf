@@ -14,7 +14,11 @@ module "sns_module" {
   for_each = local.sns_map
   source   = "./modules/sns"
 
-  topics = each.value
+  topics = each.value.topics
+
+  providers = {
+    aws = aws.sns
+  }
 }
 
 #################################################
@@ -22,10 +26,15 @@ module "sns_module" {
 #################################################
 module "static_s3_upload" {
   for_each = local.static_files_map
-  source   = "./modules/s3_static_upload"
 
-  app_key = each.key
-  cfg     = each.value
+  source = "./modules/s3_static_upload"
+  cfg    = each.value
+
+  depends_on = [
+    aws_s3_bucket.static_shared,
+    aws_s3_bucket_public_access_block.static_shared,
+    aws_s3_bucket_policy.allow_public
+  ]
 }
 
 #################################################
@@ -100,9 +109,18 @@ module "s3_module" {
 
   # Core identifiers
   app_key     = each.key
-  bucket_name = "${each.key}-bucket" # override if you need custom naming
+  bucket_name = "${each.key}-bucket-test" # override if you need custom naming
 
-  active_public_keys = local.active_public_keys
+  active_public_keys = local.cf_keys_by_app[each.key]
+
+  public_key_ids = {
+    for alias in local.cf_keys_by_app[each.key] :
+    alias => aws_cloudfront_public_key.global_keys[alias].id
+  }
+
+  key_group_ids = {
+    for k, v in aws_cloudfront_key_group.global_key_groups : k => v.id
+  }
 
   # CloudFront wiring
   cloudfront_cfg = {

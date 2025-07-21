@@ -6,7 +6,7 @@
 # https://www.youtube.com/watch?v=EIYrhbBk7do
 # https://stackoverflow.com/questions/5014632/how-can-i-parse-a-yaml-file-from-a-linux-shell-script
 environmentArray=("prod" "qa" "dev")
-appNameArray=("insizon")
+appNameArray=("insizon" "insizonxcontractor" )
 
 # How to install openssl
 # brew install openssl
@@ -22,8 +22,8 @@ create_Keys() {
     exit 1
   fi
 
-  fileNamePrivate="../private/cloudfront/rsa_keys/private/$1-$2-private-key.pem"
-  fileNamePublic="../private/cloudfront/rsa_keys/public/$1-$2-public-key.pem"
+  fileNamePrivate="./private/cloudfront/rsa_keys/private/$1-$2-private-key.pem"
+  fileNamePublic="./private/cloudfront/rsa_keys/public/$1-$2-public-key.pem"
   # How to generate cloudfron key
   if [ -e "$fileNamePrivate" ] || [ -e "$fileNamePublic" ]
   then
@@ -61,44 +61,44 @@ delete_key() {
 
 
 prompt_select() {
-  title="Select example"
-  prompt="Pick an option:"
-  options=("Generate Keys" "Delete Key" "Help")
+title="Select example"
+prompt="Pick an option:"
+options=("Generate Keys" "Delete Key" "Help")
 
-  echo "$title"
-  PS3="$prompt "
-  select opt in "${options[@]}" "Quit"; 
-  do 
-      case "$REPLY" in
-      1) 
-        echo "You picked $opt which is option 1"
-        generate_keys
-        break
-        ;;
-      2) 
-        echo "You picked $opt which is option 2"
-        echo "You have 10sec to cancel before all private and public keys are deleted"
-        sleep 10
-        fileNamePrivate="../private/cloudfront/rsa_keys/private/*"
-        fileNamePublic="../private/cloudfront/rsa_keys/public/*"
-        rm -rf $fileNamePrivate
-        rm -rf $fileNamePublic
-        break
-        ;;
-      3) 
-        echo "You picked $opt which is option 3"
-        break
-        ;;
-      4) 
-        echo "Goodbye!"; 
-        break
-        ;;
-      *) 
-        echo "Invalid option. Try another one.";
-        continue
-        ;;
-      esac
-  done
+echo "$title"
+PS3="$prompt "
+select opt in "${options[@]}" "Quit"; 
+do 
+    case "$REPLY" in
+    1) 
+      echo "You picked $opt which is option 1"
+      generate_keys
+      break
+      ;;
+    2) 
+      echo "You picked $opt which is option 2"
+      echo "You have 10sec to cancel before all private and public keys are deleted"
+      sleep 10
+      fileNamePrivate="./private/cloudfront/rsa_keys/private/*"
+      fileNamePublic="./private/cloudfront/rsa_keys/public/*"
+      rm -rf $fileNamePrivate
+      rm -rf $fileNamePublic
+      break
+      ;;
+    3) 
+      echo "You picked $opt which is option 3"
+      break
+      ;;
+    4) 
+      echo "Goodbye!"; 
+      break
+      ;;
+    *) 
+      echo "Invalid option. Try another one.";
+      continue
+      ;;
+    esac
+done
 }
 
 

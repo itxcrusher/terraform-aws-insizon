@@ -2,7 +2,7 @@
 # Each record = one Lambda function.
 
 lambda_events:
-  - app_name: insizon-app
+  - app_name: insizon
     env: dev
     function_name: post-to-insizon
     create_service: true

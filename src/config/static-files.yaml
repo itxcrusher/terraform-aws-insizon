@@ -1,14 +1,9 @@
-# static-files.yaml ──────────────────────────────────────────────────────
-# Controls which files/folders the static-upload module will push to S3.
+# static-files.yaml ─────────────────────────────────────────────
+# Correct YAML format for shared S3 bucket with structured folders
 
 static_files:
-  - app_name: insizon-app
-    env: dev
-
-    # Sub-folder inside private/static_bucket/<app>-<env>/ to upload.
-    # Default = "public"
-    folder_name: public
-
-    # List of glob patterns or exact filenames to *skip*.
-    files_excluded:
-      - photo.png
+  static_folder_name: static-bucket-insizon  # local directory and bucket name | should be unique
+  apps:
+    - app_name: insizon-dev
+      files_excluded:
+        - photo.png

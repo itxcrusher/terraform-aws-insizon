@@ -11,7 +11,8 @@
 cloudfront_key_groups:
   - key_group_name: dev-key-group
     keys:
-      - insizon-app-dev
+      - insizon-dev
+      - insizonxcontractor-dev
     default_root_object: index.html
     price_class: PriceClass_All
     viewer_protocol_policy: redirect-to-https
@@ -28,4 +29,5 @@ cloudfront_key_groups:
         - US
         - CA
     apps:
-      - insizon-app:dev
+      - insizon:dev
+      - insizonxcontractor:dev
