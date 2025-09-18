@@ -1,0 +1,20 @@
+# user-roles.yaml (PROD)
+# Purpose: Identities to be created for production.
+# Keep prod minimal and locked down.
+
+enabled: true
+
+users:
+  - userName: service-account-prod
+    fullName: Service Account Prod
+    roles: [serviceAccount]
+    type: privileged
+    limit:
+      - insizon
+      - poptheballondating
+      - clccthattea
+      - dropaddy
+      - personalitycharm
+      - myfrion
+      - superchat
+      - maxgeneye

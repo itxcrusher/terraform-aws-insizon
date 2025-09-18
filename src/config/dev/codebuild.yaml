@@ -1,0 +1,24 @@
+# codebuild.yaml — Terraform CI project (builds/plans/applies).
+# The backend block below tells the CI container how to init remote state.
+
+enabled: true
+
+codebuild:
+  # Identity / naming
+  name_prefix: "tf-aws"
+
+  # Source & buildspec
+  repo_url: "https://github.com/insizon/terraformAws.git"
+  buildspec_path: "src/modules/codebuild/buildspec-ci.yaml"
+
+  # Build environment
+  compute_type: BUILD_GENERAL1_MEDIUM
+  image: "aws/codebuild/standard:7.0"
+
+  # GitHub integration (PAT is read from SSM at runtime)
+  github_token_param: "insizon-github-ci-token"
+  github_branch: "main"
+
+backend:
+  bucket: "insizon-terraform-remote-state-backend-bucket"
+  dynamodb_table: "terraform-locks"

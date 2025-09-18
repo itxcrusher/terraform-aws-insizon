@@ -1,0 +1,20 @@
+# sns.yaml — HTTP/HTTPS topic subscriptions for THIS env directory.
+# Key is a logical collection label; free to rename.
+
+enabled: true
+
+sns:
+  insizon:
+    topics:
+      bounces:
+        name: "email-insizon-bounces"
+        endpoint: "https://service-api-worker-backend-app-5cc5274304b1.herokuapp.com/api/insizon/email/email-bounces"
+        protocols: ["https"]
+      complaints:
+        name: "email-insizon-complaints"
+        endpoint: "https://service-api-worker-backend-app-5cc5274304b1.herokuapp.com/api/insizon/email/email-complaints"
+        protocols: ["https"]
+      deliveries:
+        name: "email-insizon-deliveries"
+        endpoint: "https://service-api-worker-backend-app-5cc5274304b1.herokuapp.com/api/insizon/email/email-deliveries"
+        protocols: ["https"]

@@ -1,0 +1,7 @@
+# kms.yaml — customer-managed KMS key used by services/Secrets Manager.
+
+enabled: true
+
+kms:
+  alias_name: "alias/insizon-dev-kms"
+  rotation_days: 365

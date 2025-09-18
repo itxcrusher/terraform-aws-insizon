@@ -1,0 +1,9 @@
+# static-files.yaml (QA)
+# Purpose: Shared static bucket + per-app upload rules for THIS environment.
+# Tip: Use a unique bucket name per env to avoid collisions.
+
+enabled: false
+
+static_files:
+  static_folder_name: static-bucket-insizon
+  apps: []  # add items like: { app_name: myapp-assets, files_excluded: [".DS_Store"] }

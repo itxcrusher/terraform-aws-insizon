@@ -1,0 +1,6 @@
+# lambda-event.yaml (PROD)
+# Purpose: Lambda functions. None defined yet.
+
+enabled: false
+
+lambda_events: []

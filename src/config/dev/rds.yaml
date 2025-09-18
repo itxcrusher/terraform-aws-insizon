@@ -1,0 +1,21 @@
+# rds.yaml — Postgres RDS. Usually off in dev unless needed.
+
+enabled: true
+
+rds:
+  engine_version: "17.5"
+
+  sizing:
+    instance_class: "db.t4g.micro"
+    multi_az: false
+    allocated_storage: 20
+    backup_retention: 3
+
+  # Networking (real IDs required)
+  vpc_id: "vpc-0ea9888b4bd62ccb4"
+  subnet_ids: ["subnet-0927b9c05b9fcf0d0", "subnet-0d3cef8a0ebac1db9"]
+  sg_ids: ["sg-0026487553bf7472a"]
+
+  db_name: "appdb"
+  username_ssm: "insizon-rds-username"    # app_admin
+  password_ssm: "insizon-rds-password"    # Password123!

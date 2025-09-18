@@ -1,0 +1,13 @@
+# glacier.yaml (PROD)
+# Purpose: Lifecycle policies for S3 → Glacier classes.
+
+enabled: false
+
+glacier:
+  rules:
+    - bucket: "insizon-artifacts-bucket"
+      prefix: "logs/"
+      to_ir_after: 30
+      to_fr_after: 120
+      to_da_after: 365
+      expire_after: 1095

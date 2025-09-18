@@ -1,0 +1,10 @@
+# user-roles.yaml (QA)
+# Purpose: Identities to be created for THIS environment.
+# Notes:
+# - roles: admin | developer | readOnly | serviceAccount
+# - limit: restricts access to the listed app_names (no env suffix).
+# Keep empty for now.
+
+enabled: false
+
+users: []

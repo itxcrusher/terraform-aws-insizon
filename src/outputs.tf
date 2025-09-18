@@ -18,25 +18,32 @@ output "cloudfront_distribution_ids" {
   value = { for k, m in module.s3_module : k => m.cloudfront_distribution_id }
 }
 
-output "cloudfront_oai_paths" {
-  value = { for k, m in module.s3_module : k => m.cloudfront_oai_path }
+# New: expose ARNs for OAC-based bucket policies (AWS:SourceArn)
+output "cloudfront_distribution_arns" {
+  value = { for k, m in module.s3_module : k => m.cloudfront_distribution_arn }
 }
 
+# From root-created global keys / key-groups
 output "cloudfront_public_key_ids" {
   value       = { for k, v in aws_cloudfront_public_key.global_keys : k => v.id }
   description = "Map of alias → CloudFront public key ID"
 }
 
 output "key_group_ids" {
-  value = {
-    for k, v in aws_cloudfront_key_group.global_key_groups : k => v.id
-  }
+  value       = { for k, v in aws_cloudfront_key_group.global_key_groups : k => v.id }
+  description = "Map of key-group name → CloudFront KeyGroup ID"
+}
+
+# Helpful: per-app map(alias → key-id) bubbled up from S3→CloudFront
+output "cloudfront_key_pair_ids_by_app" {
+  value       = { for k, m in module.s3_module : k => m.cloudfront_key_pair_ids }
+  description = "Per app_key: map of public-key alias → CloudFront public key ID"
 }
 
 # --- S3 Static Uploads ---
 output "shared_static_bucket_name" {
-  description = "The name of the shared S3 bucket for static files"
-  value       = local.static_files_bucket_name
+  value       = local.static_enabled ? local.static_files_bucket_name : null
+  description = "Shared static bucket name when enabled"
 }
 
 output "static_uploads" {

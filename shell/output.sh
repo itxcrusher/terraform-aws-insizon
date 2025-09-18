@@ -1,11 +1,15 @@
-#!/bin/bash
-environment="dev"
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="$(cd -- "$(dirname "$0")" >/dev/null 2>&1 && pwd)"
+source "$SCRIPT_DIR/common.sh"
 
-echo "About to run terraform output"
-sleep 1
+ENVIRONMENT="${1:-}"; OUTPUT_NAME="${2:-}"
+require_env "$ENVIRONMENT"
+tf_backend_init "$ENVIRONMENT"
 
-echo "Changing to root directory"
-cd "../src"
-
-
-terraform output -raw my_output
+cd "$TF_ROOT"
+if [[ -z "$OUTPUT_NAME" ]]; then
+  terraform output
+else
+  terraform output -raw "$OUTPUT_NAME"
+fi

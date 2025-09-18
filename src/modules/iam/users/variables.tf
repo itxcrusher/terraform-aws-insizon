@@ -31,17 +31,11 @@ variable "tags" {
   default     = {}
 }
 
-variable "enable_csv_export" {
-  description = "If true, writes a credentials CSV under /private/iam_access_keys/"
-  type        = bool
-  default     = false
-}
-
 variable "pgp_key" {
   description = <<EOT
-Optional PGP public key (ASCII-armoured).  
-When supplied, the secret access key is encrypted client-side and the
-encrypted blob is stored in state / CSV.  Recommended for production.
+Optional PGP public key (ASCII-armored).
+If supplied, the secret access key is encrypted client-side and the
+encrypted blob is stored in state. Recommended for production.
 EOT
   type        = string
   default     = ""

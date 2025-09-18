@@ -1,22 +1,15 @@
 
 #
+private/*
 .env
 .env.sh
 env.sh
-shell/backend_init.sh
-private/cloudfront_keys/*
 .DS_Store
-private/iam_access_keys/*
-private/images/*
-private/secret_manager_secrets/*
 doc/exclude/*
-private/cloudfront/rsa_keys/public/*
-private/cloudfront/rsa_keys/private/*
-private/cloudfront/id/*
+*.env
 
 # Local .terraform directories
 **/.terraform/*
-.terraform.lock.hcl
 
 # .tfstate files
 *.tfstate
@@ -52,7 +45,3 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-
-# OS/Editor junk
-.DS_Store
-*.swp

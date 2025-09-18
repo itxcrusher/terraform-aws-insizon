@@ -1,0 +1,9 @@
+# static-files.yaml — shared S3 bucket + structured uploads for THIS env directory.
+
+enabled: true
+
+static_files:
+  static_folder_name: static-bucket-insizon
+  apps:
+    - app_name: insizon-app
+      files_excluded: [photo.png, .DS_Store]

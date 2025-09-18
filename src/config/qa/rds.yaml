@@ -1,0 +1,25 @@
+# rds.yaml (QA)
+# Purpose: PostgreSQL RDS configuration for THIS environment.
+# Guidance:
+# - Keep enabled=false until the networking/size is confirmed.
+# - IDs must be real in your account/region.
+
+enabled: false
+
+rds:
+  engine_version: "17.5"
+
+  sizing:
+    instance_class: "db.t4g.small"  # QA: slightly larger than dev
+    multi_az: true                  # simulate prod HA
+    allocated_storage: 50
+    backup_retention: 7
+
+  # Networking (placeholders carried from your input)
+  vpc_id: "vpc-0ea9888b4bd62ccb4"
+  subnet_ids: ["subnet-0927b9c05b9fcf0d0", "subnet-0d3cef8a0ebac1db9"]
+  sg_ids: ["sg-0026487553bf7472a"]
+
+  db_name: "appdb"
+  username_ssm: "insizon-rds-username"
+  password_ssm: "insizon-rds-password"

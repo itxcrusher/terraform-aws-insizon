@@ -1,0 +1,8 @@
+# static-files.yaml (PROD)
+# Purpose: Dedicated prod static bucket; add app folders as needed.
+
+enabled: false
+
+static_files:
+  static_folder_name: static-bucket-insizon
+  apps: []

@@ -1,0 +1,6 @@
+# sns.yaml (PROD)
+# Purpose: HTTP/HTTPS subscription topics. None defined yet.
+
+enabled: false
+
+sns: {}

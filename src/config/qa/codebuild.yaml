@@ -1,0 +1,20 @@
+# codebuild.yaml (QA)
+# Purpose: Provision a CodeBuild project for Terraform CI (plans/applies).
+# Behavior:
+# - apply_envs typically includes only "dev" so QA stays plan-only in CI.
+# - Backend settings here are passed into the CI container to init TF state.
+
+enabled: true
+
+codebuild:
+  name_prefix: "tf-aws"
+  repo_url: "https://github.com/insizon/terraformAws.git"
+  buildspec_path: "src/modules/codebuild/buildspec-ci.yaml"
+  compute_type: "BUILD_GENERAL1_MEDIUM"
+  image: "aws/codebuild/standard:7.0"
+  github_token_param: "insizon-github-ci-token"
+  github_branch: "main"
+
+backend:
+  bucket: "insizon-terraform-remote-state-backend-bucket"
+  dynamodb_table: "terraform-locks"

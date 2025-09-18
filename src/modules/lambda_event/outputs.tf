@@ -8,9 +8,6 @@ output "lambda_function_names" {
 }
 
 output "lambda_function_urls" {
-  value = {
-    for k, url in aws_lambda_function_url.lambda_url :
-    k => url.function_url
-  }
+  value       = { for k, url in aws_lambda_function_url.lambda_url : k => url.function_url }
   description = "Public URLs for HTTP-triggered Lambda functions"
 }

@@ -1,0 +1,21 @@
+# lambda-event.yaml — Lambda functions & triggers for THIS env directory.
+
+enabled: true
+
+lambda_events:
+  - app_name: insizon
+    function_name: post-to-insizon
+    create_service: false
+    runtime: nodejs18.x
+    handler: index.handler
+    memory_size: 128
+    timeout: 30
+    role_policy:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+    env_vars:
+      TARGET_URL: http://www.insizon.com
+    triggers:
+      - type: http
+      - type: cron
+        schedule: "cron(0 10 * * ? *)"

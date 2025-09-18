@@ -1,3 +1,13 @@
+###############################################################################
+# modules/s3/cloudfront.tf
+#
+# Delegates CloudFront work to the dedicated child module.
+# That child module:
+#   • Creates an Origin Access Control (OAC)
+#   • Creates the distribution (trusted key-group configured)
+#   • Exposes outputs (distribution_arn/id/domain) used by the S3 policy above
+###############################################################################
+
 module "cloudfront" {
   count  = local.use_cloudfront ? 1 : 0
   source = "../cloudfront"

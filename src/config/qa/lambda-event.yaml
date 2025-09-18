@@ -1,0 +1,8 @@
+# lambda-event.yaml (QA)
+# Purpose: Lambda functions + triggers.
+# Notes:
+# - Create records here only when QA needs them.
+
+enabled: false
+
+lambda_events: []

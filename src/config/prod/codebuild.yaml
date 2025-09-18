@@ -1,0 +1,18 @@
+# codebuild.yaml (PROD)
+# Purpose: CodeBuild project for Terraform CI.
+# Policy: keep auto-apply gated to dev; prod applies should be manual/approved.
+
+enabled: true
+
+codebuild:
+  name_prefix: "tf-aws"
+  repo_url: "https://github.com/insizon/terraformAws.git"
+  buildspec_path: "src/modules/codebuild/buildspec-ci.yaml"
+  compute_type: "BUILD_GENERAL1_MEDIUM"
+  image: "aws/codebuild/standard:7.0"
+  github_token_param: "insizon-github-ci-token"
+  github_branch: "main"
+
+backend:
+  bucket: "insizon-terraform-remote-state-backend-bucket"
+  dynamodb_table: "terraform-locks"

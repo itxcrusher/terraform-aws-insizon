@@ -1,0 +1,13 @@
+# apps.yaml (QA)
+# Purpose: List apps that should be provisioned for THIS environment directory.
+# How it’s used: locals.tf reads .apps[*].app_name and .key_group_name, and
+#   derives app_key internally as "<app_name>-<env_filter>".
+# Add an app: copy one of your dev/prod entries here and change key_group_name if needed.
+# Keep this empty list if QA has no apps yet.
+
+enabled: false
+
+apps:
+  - app_name: insizonxcontractor
+    key_group_name: qa-key-group
+    tags: { project: insizonxcontractor, owner: prod-team }

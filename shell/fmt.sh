@@ -1,16 +1,8 @@
-#!/bin/bash
-environment="dev"
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="$(cd -- "$(dirname "$0")" >/dev/null 2>&1 && pwd)"
+source "$SCRIPT_DIR/common.sh"
 
-echo "About to run terraform plan"
-sleep 1
-
-echo "Changing to root directory"
-cd "../src"
-
-echo "About to formate code"
+cd "$TF_ROOT"
 terraform fmt -recursive
-sleep 1
-
-
-echo "Changing to shell directory"
-cd "../shell"
+echo "Formatting complete."

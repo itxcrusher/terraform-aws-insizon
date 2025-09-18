@@ -1,54 +1,3 @@
-###############################################################################
-# modules/cloudfront/main.tf
-#
-# Creates (once per calling app):
-#   • Public keys (for each alias passed)
-#   • Adds/creates the shared key-group (key_group_name)
-#   • Origin-Access-Control
-#   • CloudFront distribution fronting the S3 bucket
-###############################################################################
-
-# Moved the following logic to root locals
-############################
-# 1. Public keys
-############################
-# data "local_file" "public_keys" {
-#   for_each = {
-#     for alias in var.cfg.key_names :
-#     alias => "${path.module}/../../../private/cloudfront/rsa_keys/public/${alias}-public-key.pem"
-#     if contains(var.active_keys, alias)
-#   }
-
-#   filename = each.value
-# }
-
-# resource "aws_cloudfront_public_key" "this" {
-#   for_each = data.local_file.public_keys
-
-#   name        = "${each.key}-public-key-${substr(md5(each.value.content), 0, 8)}"
-#   comment     = "Public key for ${each.key}"
-#   encoded_key = each.value.content
-
-#   lifecycle {
-#     create_before_destroy = true
-#     ignore_changes        = [encoded_key]
-#   }
-# }
-
-############################
-# 2. Shared key-group
-############################
-# resource "aws_cloudfront_key_group" "shared" {
-#   name    = var.cfg.key_group_name
-#   comment = "Shared key-group managed by Terraform"
-
-#   items = [for alias in var.cfg.key_names : var.public_key_ids[alias]]
-
-# }
-
-############################
-# 3. Origin-Access-Control
-############################
 resource "aws_cloudfront_origin_access_control" "this" {
   name                              = "${var.app_key}-oac"
   description                       = "S3 OAC for ${var.app_key}"
@@ -57,9 +6,6 @@ resource "aws_cloudfront_origin_access_control" "this" {
   signing_protocol                  = "sigv4"
 }
 
-############################
-# 4. Distribution
-############################
 resource "aws_cloudfront_distribution" "this" {
   enabled             = true
   comment             = "${var.app_key}-distribution"
@@ -77,9 +23,10 @@ resource "aws_cloudfront_distribution" "this" {
     viewer_protocol_policy = var.cfg.behavior.viewer_protocol_policy
     allowed_methods        = var.cfg.behavior.allowed_methods
     cached_methods         = var.cfg.behavior.cached_methods
+    compress               = true
 
     forwarded_values {
-      query_string = false
+      query_string = true
       cookies { forward = "none" }
     }
 
@@ -96,12 +43,9 @@ resource "aws_cloudfront_distribution" "this" {
   viewer_certificate {
     cloudfront_default_certificate = true
   }
-}
 
-############################
-# 5. Create CSV export
-############################
-resource "local_file" "cloudfront_csv_export" {
-  content  = local.cloudfront_csv_content
-  filename = "${path.module}/../../../private/cloudfront/id/${var.app_key}-KeyPair-n-DistributionSubdomain.csv"
+  tags = {
+    ManagedBy = "Terraform"
+    AppKey    = var.app_key
+  }
 }

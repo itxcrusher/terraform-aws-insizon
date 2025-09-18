@@ -1,0 +1,6 @@
+# ecr.yaml (PROD)
+# Purpose: ECR repos. None defined yet—safe to keep empty.
+
+enabled: false
+
+ecr: []

@@ -1,0 +1,20 @@
+# cloudfront.yaml (PROD)
+# Purpose: Production CloudFront key group(s).
+# Security: keep keys small; rotate via Secrets Manager/CI.
+
+enabled: true
+
+cloudfront_key_groups:
+  - key_group_name: prod-key-group
+    keys:
+      - servicexaccount-prod
+    default_root_object: index.html
+    price_class: PriceClass_All
+    viewer_protocol_policy: redirect-to-https
+    allowed_methods: [GET, HEAD, OPTIONS]
+    cached_methods:  [GET, HEAD]
+    geo_restriction:
+      restriction_type: whitelist
+      locations: [US, CA, IN]
+    # human-audit only:
+    apps: [insizon, poptheballondating, clccthattea, dropaddy, personalitycharm, myfrion, superchat, maxgeneye]

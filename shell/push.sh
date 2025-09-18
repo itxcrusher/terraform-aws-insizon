@@ -1,18 +1,12 @@
-#!/bin/bash
-environment="dev"
+#!/usr/bin/env bash
+set -euo pipefail
+REPO_ROOT="$(cd -- "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && (git rev-parse --show-toplevel 2>/dev/null || pwd -P))"
+cd "$REPO_ROOT"
 
-echo "About to run terraform plan"
-sleep 1
+if git diff --quiet && git diff --cached --quiet; then
+  echo "No changes to commit."; exit 0
+fi
 
-echo "Changing to root directory"
-cd ".."
-
-echo "About to push to Github"
-sleep 1
-git add .
-git commit -m "Working hard"
+git add -A
+git commit -m "Infra updates"
 git push
-
-
-echo "Changing to root directory"
-cd "../shell"

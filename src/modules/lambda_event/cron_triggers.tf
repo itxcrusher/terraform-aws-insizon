@@ -2,7 +2,6 @@
 # cron_triggers.tf – EventBridge rules
 ###########################################################################
 
-# CloudWatch EventBridge rules (cron)
 resource "aws_cloudwatch_event_rule" "cron_trigger" {
   for_each = local.cron_functions
 
@@ -10,7 +9,6 @@ resource "aws_cloudwatch_event_rule" "cron_trigger" {
   schedule_expression = [for t in each.value.triggers : t.schedule if lower(t.type) == "cron"][0]
 }
 
-# Target Lambda
 resource "aws_cloudwatch_event_target" "cron_target" {
   for_each = aws_cloudwatch_event_rule.cron_trigger
 
@@ -18,7 +16,6 @@ resource "aws_cloudwatch_event_target" "cron_target" {
   arn  = aws_lambda_function.main[each.key].arn
 }
 
-# Permission so EventBridge can invoke Lambda
 resource "aws_lambda_permission" "allow_cron" {
   for_each = aws_cloudwatch_event_rule.cron_trigger
 

@@ -3,17 +3,20 @@
 #
 # Creates:
 #   • Private S3 bucket (versioning/encryption optional)
-#   • Origin-Access-Identity for CloudFront
+#   • (If enabled) a CloudFront distribution via child module that uses OAC
 #   • Bucket policy granting:
-#       – OAI read
-#       – reader_role_arns read (if non-empty)
-#       – writer_role_arns put/delete (if non-empty)
+#       – CloudFront (service principal) READ via OAC (AWS:SourceArn == distribution ARN)
+#       – reader_role_arns READ (optional)
+#       – writer_role_arns PUT/DELETE (optional)
 #       – TLS-only access
-#   • (Optionally) a CloudFront distribution that re-uses a shared key-group
+#
+# IMPORTANT:
+#   - We do NOT create/allow an OAI here. Distribution uses OAC.
+#   - Do not mix OAI and OAC. Pick OAC (modern & recommended).
 ###############################################################################
 
 ############################
-# 1. Bucket core
+# 1) Bucket core
 ############################
 resource "aws_s3_bucket" "main" {
   bucket = var.bucket_name
@@ -47,13 +50,13 @@ resource "aws_s3_bucket_public_access_block" "main" {
 }
 
 ############################
-# 2. Versioning & Encryption
+# 2) Versioning & Encryption
 ############################
 resource "aws_s3_bucket_versioning" "main" {
   bucket = aws_s3_bucket.main.id
 
   versioning_configuration {
-    status = var.enable_versioning ? "Enabled" : "Suspended"
+    status = local.versioning_status
   }
 }
 
@@ -69,25 +72,35 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "main" {
 }
 
 ############################
-# 3. Origin-Access-Identity
+# 3) Bucket policy (OAC + roles + TLS)
 ############################
-resource "aws_cloudfront_origin_access_identity" "oai" {
-  comment = "${var.app_key}-oai"
-}
-
-############################
-# 4. Bucket-policy
-############################
+# NOTE:
+# - We dynamically add the OAC statement only when CloudFront is enabled.
+# - The OAC statement grants s3:GetObject to CloudFront service principal
+#   constrained by AWS:SourceArn == CF distribution ARN.
 data "aws_iam_policy_document" "main" {
-  # Allow CloudFront (OAI) READ
-  statement {
-    sid = "AllowCloudFrontRead"
-    principals {
-      type        = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.oai.iam_arn]
+  # Allow CloudFront READ via OAC (only when CloudFront is enabled)
+  dynamic "statement" {
+    for_each = local.use_cloudfront ? [1] : []
+    content {
+      sid    = "AllowCloudFrontReadViaOAC"
+      effect = "Allow"
+
+      principals {
+        type        = "Service"
+        identifiers = ["cloudfront.amazonaws.com"]
+      }
+
+      actions   = ["s3:GetObject"]
+      resources = ["${aws_s3_bucket.main.arn}/*"]
+
+      # The child cloudfront module must expose distribution_arn
+      condition {
+        test     = "StringEquals"
+        variable = "AWS:SourceArn"
+        values   = [module.cloudfront[0].distribution_arn]
+      }
     }
-    actions   = ["s3:GetObject"]
-    resources = ["${aws_s3_bucket.main.arn}/*"]
   }
 
   # Conditionally allow READ for reader roles
@@ -137,9 +150,16 @@ data "aws_iam_policy_document" "main" {
   }
 }
 
-# Only attach policy if any principals exist
+# Attach the policy if CloudFront is used OR any role ARNs are provided
 resource "aws_s3_bucket_policy" "main" {
-  count  = length(var.reader_role_arns) + length(var.writer_role_arns) > 0 ? 1 : 0
+  count  = (local.use_cloudfront || length(var.reader_role_arns) + length(var.writer_role_arns) > 0) ? 1 : 0
   bucket = aws_s3_bucket.main.id
   policy = data.aws_iam_policy_document.main.json
+  # lifecycle {
+  #   replace_triggered_by = local.use_cloudfront ? [
+  #     module.cloudfront[0].distribution_arn
+  #   ] : []
+  # }
+  # And in practice, depending on the CF module prevents “empty SourceArn” edge cases
+  # depends_on = local.use_cloudfront ? [module.cloudfront] : []
 }

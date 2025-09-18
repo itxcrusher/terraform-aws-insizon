@@ -8,7 +8,7 @@ variable "app_key" {
 }
 
 variable "bucket_name" {
-  description = "Globally-unique S3 bucket name. Default recommended ⇒ <app_key>-bucket\""
+  description = "Globally-unique S3 bucket name. Default recommended ⇒ <app_key>-bucket"
   type        = string
 }
 
@@ -25,16 +25,16 @@ variable "writer_role_arns" {
 variable "enable_bucket_encryption" {
   description = "Enable AES-256 server-side encryption"
   type        = bool
-  default     = false
 }
 
 variable "enable_versioning" {
   description = "Enable S3 versioning"
   type        = bool
-  default     = false
 }
 
+# CloudFront wiring (shared key-group + behavior comes from higher-level config)
 variable "cloudfront_cfg" {
+  description = "CloudFront distribution config for this app's bucket front-end"
   type = object({
     key_group_name = string
     key_names      = list(string)
@@ -52,16 +52,18 @@ variable "cloudfront_cfg" {
   })
 }
 
+# Public key inventory for the shared key-group
 variable "active_public_keys" {
-  description = "List of public keys actively referenced by apps"
+  description = "List of public keys actively referenced by apps (not directly used here; kept for interface parity)"
   type        = list(string)
 }
 
 variable "public_key_ids" {
-  description = "Map: public key alias → CloudFront key ID"
+  description = "Map: public key alias → CloudFront public key ID"
   type        = map(string)
 }
 
 variable "key_group_ids" {
-  type = map(string)
+  description = "Map: key_group_name → CloudFront key group ID"
+  type        = map(string)
 }

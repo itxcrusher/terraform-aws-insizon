@@ -1,0 +1,9 @@
+# cloudfront.yaml (QA)
+# Purpose: Define CloudFront key groups for THIS environment.
+# Notes:
+# - 'keys' are aliases for your public keys (without .pem).
+# - Keep empty until QA needs CloudFront.
+
+enabled: false
+
+cloudfront_key_groups: []

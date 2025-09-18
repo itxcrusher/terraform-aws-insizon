@@ -33,6 +33,11 @@ variable "cloudfront_private_key" {
   sensitive = true
 }
 
+variable "cloudfront_key_alias" {
+  description = "Selected public-key alias for this app's signing key pair"
+  type        = string
+}
+
 # ------------  S3 ------------------------------------------------------
 variable "s3_bucket_name" {
   type = string
@@ -42,5 +47,4 @@ variable "s3_bucket_name" {
 variable "yaml_file_path" {
   description = "Absolute path to per-app secrets YAML (may be empty)."
   type        = string
-  default     = "" # ← optional now
 }

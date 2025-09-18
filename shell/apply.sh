@@ -1,33 +1,11 @@
-#!/bin/bash
-# bash apply.sh vs source apply.sh
-environment="$1"
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="$(cd -- "$(dirname "$0")" >/dev/null 2>&1 && pwd)"
+source "$SCRIPT_DIR/common.sh"
 
-echo "About to run terraform apply"
-sleep 1
+ENVIRONMENT="${1:-}"; require_env "$ENVIRONMENT"
+tf_backend_init "$ENVIRONMENT"
+tf_format_validate
 
-echo "Changing to root directory"
-cd "../src"
-
-echo "About to delete .terraform folder"
-rm -rf "./terraform"
-sleep 1
-
-
-echo "About to formate code"
-terraform fmt -recursive
-sleep 1
-
-echo "About to source project"
-source ".env"
-sleep 1
-
-echo "About to create .terraform folder"
-terraform init -upgrade
-sleep 1
-
-
-terraform apply -var-file="./env/$environment.tfvars" -auto-approve
-
-echo "Change back to shell dir"
-cd "../shell/"
-sleep 1
+cd "$TF_ROOT"
+terraform apply -input=false -auto-approve

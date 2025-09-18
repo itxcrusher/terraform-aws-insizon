@@ -24,9 +24,8 @@ resource "aws_iam_role" "lambda_exec" {
 }
 
 ###########################################################################
-# Attach AWS managed policies
+# Attach provided policy ARNs
 ###########################################################################
-
 resource "aws_iam_role_policy_attachment" "lambda_policies" {
   for_each = {
     for item in local.flattened_lambda_policies :
@@ -36,9 +35,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policies" {
   role       = aws_iam_role.lambda_exec[each.value.name].name
   policy_arn = each.value.policy
 
-  depends_on = [
-    aws_iam_role.lambda_exec
-  ]
+  depends_on = [aws_iam_role.lambda_exec]
 }
 
 #########################
@@ -54,17 +51,21 @@ resource "aws_lambda_function" "main" {
   timeout       = each.value.timeout
   memory_size   = each.value.memory_size
 
-  filename = "${path.module}/../../../private/lambda/${var.app_key}/${each.key}.zip"
+  filename         = local.artifact_path[each.key]
+  source_code_hash = filesha256(local.artifact_path[each.key])
 
-  environment { variables = each.value.env_vars }
+  environment {
+    variables = try(each.value.env_vars, {})
+  }
 }
 
+# Function URLs for HTTP-triggered lambdas
 resource "aws_lambda_function_url" "lambda_url" {
   for_each = local.http_functions
 
   function_name      = aws_lambda_function.main[each.key].function_name
-  authorization_type = "NONE" # Can also be AWS_IAM
-  
+  authorization_type = "NONE" # change to AWS_IAM if you need signed invocations
+
   cors {
     allow_methods = ["GET", "POST"]
     allow_origins = ["*"]

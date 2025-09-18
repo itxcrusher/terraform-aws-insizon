@@ -1,0 +1,38 @@
+# apps.yaml (PROD)
+# Purpose: Apps to provision in production.
+# Tip: Use a dedicated prod key group; tighten tags/owners.
+
+enabled: true
+
+apps:
+  - app_name: insizon
+    key_group_name: prod-key-group
+    tags: { project: insizon, owner: prod-team }
+
+  - app_name: poptheballondating
+    key_group_name: prod-key-group
+    tags: { project: poptheballondating, owner: prod-team }
+
+  - app_name: clccthattea
+    key_group_name: prod-key-group
+    tags: { project: clccthattea, owner: prod-team }
+
+  - app_name: dropaddy
+    key_group_name: prod-key-group
+    tags: { project: dropaddy, owner: prod-team }
+
+  - app_name: personalitycharm
+    key_group_name: prod-key-group
+    tags: { project: personalitycharm, owner: prod-team }
+
+  - app_name: myfrion
+    key_group_name: prod-key-group
+    tags: { project: myfrion, owner: prod-team }
+
+  - app_name: superchat
+    key_group_name: prod-key-group
+    tags: { project: superchat, owner: prod-team }
+
+  - app_name: maxgeneye
+    key_group_name: prod-key-group
+    tags: { project: maxgeneye, owner: prod-team }

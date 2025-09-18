@@ -4,6 +4,7 @@ variable "app_key" {
 }
 
 variable "cfg" {
+  description = "Per-app CloudFront config + behavior"
   type = object({
     bucket_regional_domain_name = string
     origin_id                   = string
@@ -26,14 +27,24 @@ variable "cfg" {
     condition     = length(var.cfg.key_names) <= 100
     error_message = "An AWS Key Group supports at most 100 public keys."
   }
+
+  validation {
+    condition     = length(trimspace(var.cfg.bucket_regional_domain_name)) > 0 && length(trimspace(var.cfg.origin_id)) > 0
+    error_message = "bucket_regional_domain_name and origin_id must be non-empty."
+  }
 }
 
 variable "public_key_ids" {
-  description = "Map of public key alias → CloudFront public key ID, passed from root"
+  description = "Map of public-key alias → CloudFront public key ID (created at root)"
   type        = map(string)
 }
 
 variable "key_group_ids" {
+  description = "Map of key-group name → CloudFront KeyGroup ID (created at root)"
   type        = map(string)
-  description = "Map of key alias to CloudFront key group IDs"
+
+  validation {
+    condition     = contains(keys(var.key_group_ids), var.cfg.key_group_name)
+    error_message = "key_group_ids must contain cfg.key_group_name."
+  }
 }

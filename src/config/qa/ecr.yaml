@@ -1,0 +1,9 @@
+# ecr.yaml (QA)
+# Purpose: Define ECR repositories per app.
+# Notes:
+# - create_service=false skips creation.
+# - Keep empty if QA has none.
+
+enabled: false
+
+ecr: []

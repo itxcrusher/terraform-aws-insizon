@@ -1,0 +1,22 @@
+# sms.yaml (PROD)
+# Purpose: Account-level SNS SMS prefs; optional topics/Pinpoint.
+
+enabled: false
+
+sms:
+  preferences:
+    default_sender_id: "INSIZON"
+    monthly_spend_limit: "1"
+    default_sms_type: "Transactional"
+    delivery_status_iam_role_arn: ""
+    delivery_status_success_sampling_rate: "0"
+    usage_report_s3_bucket: ""
+
+  topics:
+    - name: "insizon-sms-events"
+      display_name: "Insizon SMS Events"
+      tags: { purpose: "sms" }
+
+  pinpoint:
+    enable: false
+    application_name: "insizon-sms-app"

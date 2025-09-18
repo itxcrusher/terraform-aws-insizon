@@ -1,0 +1,12 @@
+# glacier.yaml — S3 lifecycle transitions for existing buckets.
+
+enabled: true
+
+glacier:
+  rules:
+    - bucket: "insizon-artifacts-bucket"
+      prefix: "logs/"
+      to_ir_after: 30
+      to_fr_after: 120
+      to_da_after: 365
+      expire_after: 1095

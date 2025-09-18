@@ -1,0 +1,9 @@
+# kms.yaml (QA)
+# Purpose: Customer-managed KMS key for cross-service encryption.
+# Safe default: enable everywhere.
+
+enabled: false
+
+kms:
+  alias_name: "alias/insizon-qa-kms"
+  rotation_days: 365               # AWS supports 90–365

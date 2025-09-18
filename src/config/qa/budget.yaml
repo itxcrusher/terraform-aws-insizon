@@ -1,0 +1,9 @@
+# budget.yaml (QA)
+# Purpose: Zero or more AWS Budgets, one per app (in this env dir).
+# Notes:
+# - If empty, no budgets are created.
+# - Enums mirror AWS console/API (COST, USD, MONTHLY, etc.).
+
+enabled: false
+
+budgets: []

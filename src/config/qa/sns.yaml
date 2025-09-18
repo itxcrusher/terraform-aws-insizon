@@ -1,0 +1,14 @@
+# sns.yaml (QA)
+# Purpose: HTTP/HTTPS subscription topics (separate from SMS).
+# Structure:
+# sns:
+#   <collection_label>:
+#     topics:
+#       <logical_name>:
+#         name: "<aws_topic_name>"
+#         endpoint: "https://example.com/hook"
+#         protocols: ["https"]
+
+enabled: false
+
+sns: {}

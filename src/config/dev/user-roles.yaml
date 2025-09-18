@@ -1,0 +1,50 @@
+# user-roles.yaml — identities scoped to THIS env directory.
+# Keep only the users you truly want created in this environment.
+# - roles: admin | developer | readOnly | serviceAccount
+# - limit: restricts access to listed app_names (no env suffix needed here)
+
+enabled: true
+
+users:
+  - userName: service-account-dev
+    fullName: Service Account Dev
+    roles: [serviceAccount]
+    type: privileged
+    limit:
+      - insizon
+      - poptheballondating
+      - clccthattea
+      - dropaddy
+      - personalitycharm
+      - myfrion
+      - superchat
+      - maxgeneye
+
+  - userName: prayasxcontractor
+    fullName: Prayas Contractor Developer
+    roles: [developer]
+    type: privileged
+    limit:
+      - insizonxcontractor
+      - poptheballondatingxcontractor
+      - clccthatteaxcontractor
+      - dropaddyxcontractor
+      - personalitycharmxcontractor
+      - myfrionxcontractor
+      - superchatxcontractor
+      - maxgeneyexcontractor
+
+  - userName: lamonte-scott
+    fullName: Lamonte Scott
+    roles: [admin]
+    type: privileged
+    limit:
+      - insizon
+      - maxgeneye
+
+  - userName: user-sara-banks
+    fullName: Sara Banks
+    roles: [readOnly]
+    type: privileged
+    limit:
+      - insizon

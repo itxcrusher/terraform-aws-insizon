@@ -1,0 +1,10 @@
+# ecr.yaml — ECR repo config per app for THIS env directory.
+
+enabled: true
+
+ecr:
+  - app_name: insizon
+    service_name: insizon
+    create_service: false
+    scan_on_push: true
+    lifecycle_policy: "retain-last-20"

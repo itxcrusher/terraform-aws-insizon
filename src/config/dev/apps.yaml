@@ -1,0 +1,72 @@
+# apps.yaml — one row per application that needs infra in THIS env directory.
+# Fields:
+# - app_name         Globally unique logical name for the app.
+# - key_group_name   Must match an entry in cloudfront.yaml.
+# - tags             Optional map propagated to app resources.
+
+enabled: true
+
+apps:
+  - app_name: insizon
+    key_group_name: dev-key-group
+    tags: { project: insizon, owner: dev-team }
+
+  - app_name: insizonxcontractor
+    key_group_name: dev-key-group
+    tags: { project: insizonxcontractor, owner: dev-team }
+
+  - app_name: poptheballondating
+    key_group_name: dev-key-group
+    tags: { project: poptheballondating, owner: dev-team }
+
+  - app_name: poptheballondatingxcontractor
+    key_group_name: dev-key-group
+    tags: { project: poptheballondatingxcontractor, owner: dev-team }
+
+  - app_name: clccthattea
+    key_group_name: dev-key-group
+    tags: { project: clccthattea, owner: dev-team }
+
+  - app_name: clccthatteaxcontractor
+    key_group_name: dev-key-group
+    tags: { project: clccthatteaxcontractor, owner: dev-team }
+
+  - app_name: dropaddy
+    key_group_name: dev-key-group
+    tags: { project: dropaddy, owner: dev-team }
+
+  - app_name: dropaddyxcontractor
+    key_group_name: dev-key-group
+    tags: { project: dropaddyxcontractor, owner: dev-team }
+
+  - app_name: personalitycharm
+    key_group_name: dev-key-group
+    tags: { project: personalitycharm, owner: dev-team }
+
+  - app_name: personalitycharmxcontractor
+    key_group_name: dev-key-group
+    tags: { project: personalitycharmxcontractor, owner: dev-team }
+
+  - app_name: myfrion
+    key_group_name: dev-key-group
+    tags: { project: myfrion, owner: dev-team }
+
+  - app_name: myfrionxcontractor
+    key_group_name: dev-key-group
+    tags: { project: myfrionxcontractor, owner: dev-team }
+
+  - app_name: superchat
+    key_group_name: dev-key-group
+    tags: { project: superchat, owner: dev-team }
+
+  - app_name: superchatxcontractor
+    key_group_name: dev-key-group
+    tags: { project: superchatxcontractor, owner: dev-team }
+
+  - app_name: maxgeneye
+    key_group_name: dev-key-group
+    tags: { project: maxgeneye, owner: dev-team }
+
+  - app_name: maxgeneyexcontractor
+    key_group_name: dev-key-group
+    tags: { project: maxgeneyexcontractor, owner: dev-team }

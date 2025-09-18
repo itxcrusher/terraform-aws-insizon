@@ -1,0 +1,20 @@
+# budget.yaml (PROD)
+# Purpose: Budgets guarding prod costs.
+# NOTE: Your original had threshold=8 with a comment “80%”.
+# We preserve your exact value (8). Change to 80 if that was a typo.
+
+enabled: true
+
+budgets:
+  - app_name: insizon
+    limit_amount: 25
+    limit_unit: USD
+    budget_type: COST
+    time_unit: MONTHLY
+    start_date: "2024-01-01_00:00"
+    threshold: 8
+    comparison_operator: GREATER_THAN
+    threshold_type: PERCENTAGE
+    notification_type: ACTUAL
+    email_recipients:
+      - lamonte.scott@insizon.com

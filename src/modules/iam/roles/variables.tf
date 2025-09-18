@@ -13,3 +13,20 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "env" {
+  description = "Environment suffix to make role names unique per env (e.g., dev|qa|prod)"
+  type        = string
+}
+
+variable "name_prefix" {
+  description = "Optional prefix for role names (e.g., insizon-)"
+  type        = string
+  default     = ""
+}
+
+variable "name_suffix" {
+  description = "Optional suffix after env (rarely needed)"
+  type        = string
+  default     = ""
+}

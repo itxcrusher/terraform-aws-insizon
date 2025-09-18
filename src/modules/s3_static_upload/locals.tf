@@ -1,14 +1,16 @@
 locals {
-  # Dynamically resolve path to source directory
-  source_dir = abspath("${path.module}/../../../private/${var.cfg.bucket_name}/${var.cfg.app_name}")
+  # Gather files under source_dir (tolerate empty/missing dir → upload nothing)
+  candidate_files = try(fileset(var.source_dir, "**"), [])
 
-  candidate_files = fileset(local.source_dir, "**")
+  # Filter out excluded basenames (not globs; keep it simple and explicit)
+  excluded_names = toset(try(var.cfg.files_excluded, []))
 
   upload_files = [
-    for f in local.candidate_files :
-    f if !contains(var.cfg.files_excluded, f)
+    for rel in local.candidate_files : rel
+    if !contains(local.excluded_names, regex("[^/]+$", rel))
   ]
 
+  # Minimal content-type map (fallback to octet-stream)
   mime_map = {
     html = "text/html"
     css  = "text/css"
@@ -19,5 +21,6 @@ locals {
     svg  = "image/svg+xml"
     json = "application/json"
     txt  = "text/plain"
+    ico  = "image/x-icon"
   }
 }

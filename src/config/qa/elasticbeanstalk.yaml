@@ -1,0 +1,9 @@
+# elasticbeanstalk.yaml (QA)
+# Purpose: List Elastic Beanstalk applications/environments.
+# Notes:
+# - platform string must match AWS available solution stacks.
+# - Keep empty if QA uses none.
+
+enabled: false
+
+beanstalk: []

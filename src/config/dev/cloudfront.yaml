@@ -1,0 +1,24 @@
+# cloudfront.yaml — key groups & behavior for THIS env directory.
+# 'keys' are public-key aliases (file/secret identifiers without .pem).
+
+enabled: true
+
+cloudfront_key_groups:
+  - key_group_name: dev-key-group
+    keys:
+      - servicexaccount-dev
+      - prayasxcontractor-dev
+      - insizonxcontractor-dev
+    default_root_object: index.html
+    price_class: PriceClass_All
+    viewer_protocol_policy: redirect-to-https
+    allowed_methods: [GET, HEAD, OPTIONS]
+    cached_methods:  [GET, HEAD]
+    geo_restriction:
+      restriction_type: whitelist
+      locations: [US, CA, IN]
+
+    # Human-audit only (not read by Terraform):
+    apps: [insizon, poptheballondating, clccthattea, dropaddy, personalitycharm, myfrion, superchat, maxgeneye,
+           insizonxcontractor, poptheballondatingxcontractor, clccthatteaxcontractor, dropaddyxcontractor,
+           personalitycharmxcontractor, myfrionxcontractor, superchatxcontractor, maxgeneyexcontractor]

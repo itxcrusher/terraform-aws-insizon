@@ -1,0 +1,8 @@
+# kms.yaml (PROD)
+# Purpose: CMK for prod workloads.
+
+enabled: false
+
+kms:
+  alias_name: "alias/insizon-prod-kms"
+  rotation_days: 365

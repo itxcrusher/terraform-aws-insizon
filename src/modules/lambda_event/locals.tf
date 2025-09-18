@@ -3,7 +3,7 @@
 ###########################################################################
 
 locals {
-  # Only build resources when create_service = true
+  # Build only items with create_service = true
   valid_functions = {
     for f in var.functions :
     f.function_name => f if f.create_service
@@ -29,4 +29,10 @@ locals {
       }
     ]
   ])
+
+  # Resolve artifact path per function (fail-fast if missing)
+  artifact_path = {
+    for fn, _ in local.valid_functions :
+    fn => var.artifacts[fn]
+  }
 }

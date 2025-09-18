@@ -1,0 +1,13 @@
+# elasticbeanstalk.yaml — Beanstalk apps for THIS env directory.
+
+enabled: true
+
+beanstalk:
+  - app_name: insizon
+    service_name: insizon
+    create_service: false
+    platform: "64bit Amazon Linux 2023 v6.6.1 running Node.js 22"
+    tier: WebServer      # WebServer | Worker
+    env_vars:
+      API_KEY: abc123
+      NODE_ENV: production

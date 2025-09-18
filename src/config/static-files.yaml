@@ -1,9 +1,0 @@
-# static-files.yaml ─────────────────────────────────────────────
-# Correct YAML format for shared S3 bucket with structured folders
-
-static_files:
-  static_folder_name: static-bucket-insizon  # local directory and bucket name | should be unique
-  apps:
-    - app_name: insizon-dev
-      files_excluded:
-        - photo.png

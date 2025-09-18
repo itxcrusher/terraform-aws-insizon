@@ -1,0 +1,6 @@
+# elasticbeanstalk.yaml (PROD)
+# Purpose: Beanstalk apps. None defined yet.
+
+enabled: false
+
+beanstalk: []

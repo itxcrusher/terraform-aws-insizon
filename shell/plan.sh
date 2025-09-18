@@ -1,28 +1,11 @@
-#!/bin/bash
-environment="$1"
+#!/usr/bin/env bash
+set -euo pipefail
+SCRIPT_DIR="$(cd -- "$(dirname "$0")" >/dev/null 2>&1 && pwd)"
+source "$SCRIPT_DIR/common.sh"
 
-echo "About to run terraform plan"
-sleep 1
+ENVIRONMENT="${1:-}"; require_env "$ENVIRONMENT"
+tf_backend_init "$ENVIRONMENT"
+tf_format_validate
 
-echo "Changing to root directory"
-cd "../src"
-
-
-echo "About to delete .terraform folder"
-rm -rf "./terraform"
-sleep 1
-
-
-echo "About to formate code"
-terraform fmt -recursive
-sleep 1
-
-echo "About to source project"
-source ".env"
-sleep 1
-
-echo "About to create .terraform folder"
-terraform init
-sleep 1
-
-terraform plan -var-file="./env/$environment.tfvars"
+cd "$TF_ROOT"
+terraform plan -input=false
